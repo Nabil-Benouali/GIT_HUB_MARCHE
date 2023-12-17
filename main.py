@@ -227,3 +227,46 @@ for word, count in word_counts.most_common(10):
 
 
 
+
+
+
+
+
+
+#travail mariem #17/12/2023
+#1
+def split_question(what_is_the_earth_made_of):
+    return question.split()
+question = "What is the Earth made of?"
+words = split_question(question)
+print(words)
+#2
+def common_terms(question, corpus):
+    corpus_content = [extract(file) for file in corpus]
+    question_terms = set(question.lower().split())
+    corpus_terms = set(' '.join(corpus_content).lower().split())
+    # Find and return the common terms
+    common = question_terms.intersection(corpus_terms)
+    return common
+
+question = "terms that form the intersection between the set of words in the corpus and the set of words in the question ?"
+corpus = ("Nomination_Chirac1.txt", "Nomination_Chirac2.txt", "Nomination_Giscard dEstaing.txt", "Nomination_Hollande.txt",
+"Nomination_Macron.txt", "Nomination_Mitterand1.txt", "Nomination_Mitterand2.txt", "Nomination_Sarkozy.txt")
+
+print(common_terms(question, corpus))
+#3
+question = "the TF-IDF matrix of the corpus must have N rows and M columns, where N = 8 and M =1681 "
+corpus = ("Nomination_Chirac1.txt", "Nomination_Chirac2.txt", "Nomination_Giscard dEstaing.txt", "Nomination_Hollande.txt",
+"Nomination_Macron.txt", "Nomination_Mitterand1.txt", "Nomination_Mitterand2.txt", "Nomination_Sarkozy.txt")
+def compute_tf(question, corpus):
+    words = question.split()
+    tf_scores = {words}
+    tf_victor = {}
+
+    for words in corpus :
+        tf_vector[word] = tf_scores.get(word, 0)
+    return tf_vector
+
+
+
+
