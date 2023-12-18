@@ -235,7 +235,7 @@ for word, count in word_counts.most_common(10):
 
 #travail mariem #17/12/2023
 #1
-def split_question(what_is_the_earth_made_of):
+def split_question(question):
     return question.split()
 question = "What is the Earth made of?"
 words = split_question(question)
@@ -269,4 +269,6 @@ def compute_tf(question, corpus):
 
 
 
+
+# Travail Hugo
 
