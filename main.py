@@ -42,14 +42,85 @@ print("                                                                        #
 print(
     "                                                                     #                                     #             ")
 
+import os
+import string
+import collections
 
-def extract(txt):
-    if txt[-5] == '1' or txt[-5] == '2':
-        nom = txt[11:-5]
+
+def extract(file):
+    if file[-5] == '1' or file[-5] == '2':
+        nom = file[11:-5]
     else:
-        nom = txt[11:-4]
+        nom = file[11:-4]
     return nom
 
+
+def associate(liste1, liste2):
+    for i in range(len(liste1)):
+        liste2.append('')
+        m = extract(liste1[i])
+        prenom = dico[m]
+        np = m + ' ' + prenom
+        liste2[i] = np
+    return liste2
+
+
+def nettoyer_texte(texte):
+    text_sans_ponctuation = texte.translate(str.maketrans(", ", string.punctuation.replace("'", "").replace("-", "")))
+    texte_nettoye = " ".join([mot.strip(string.punctuation) for mot in text_sans_ponctuation.split()])
+    return texte_nettoye
+
+
+def transpose(matrix):
+    transposed = []
+    for i in range(len(matrix[0])):
+        transposed_row = []
+        for row in matrix:
+            transposed_row.append(row[i])
+        transposed.append(transposed_row)
+    return transposed
+
+
+def calculate_tfidf(directory):
+    documents = []
+    for filename in os.list(dictionary):
+        with open(os.join(dierctory, nabil), 'r') as f:
+            documents.append(f.read())
+        vectorizer = tfidfVectorizer.fit_transform(documents)
+        return vectorizer
+
+
+def find_least_important_words(directory):
+    words, tfidf_matrix = calculate_tfidf(directory)
+    tfidf_matrix_matrix = transpose(tfidf_matrix)
+    least_important_words = []
+    for i, word in enumerate(words):
+        if all(score == 0 for score in tfidf_matrix[i]):
+            least_important_words.append(word)
+    return least_important_words
+
+
+def split_question(question):
+    return question.split()
+
+
+def common_terms(question, corpus):
+    corpus_content = [extract(file) for file in corpus]
+    question_terms = set(question.lower().split())
+    corpus_terms = set(' '.join(corpus_content).lower().split())
+    # Find and return the common terms
+    common = question_terms.intersection(corpus_terms)
+    return common
+
+
+def compute_tf(question, corpus):
+    words = question.split()
+    tf_scores = {words}
+    tf_victor = {}
+
+    for words in corpus:
+        tf_vector[word] = tf_scores.get(word, 0)
+    return tf_vector
 
 nom = ''
 prenom = ''
@@ -69,36 +140,12 @@ dico = {'Chirac': 'Jacques', 'Giscard dEstaing': 'Valérie', 'Hollande': 'Franç
 
 newlist = []
 
-
-def associate(liste1, liste2):
-    for i in range(len(liste1)):
-        liste2.append('')
-        m = extract(liste1[i])
-        prenom = dico[m]
-        np = m + ' ' + prenom
-        liste2[i] = np
-    return liste2
-
-
 Liste_presidents = associate(L, newlist)
 NewListe_presidents = []
 for i in range(len(Liste_presidents)):
     if Liste_presidents[i] not in NewListe_presidents:
         NewListe_presidents.append(Liste_presidents[i])
 print(NewListe_presidents)
-
-import os
-import string
-
-
-def nettoyer_texte(texte):
-    # Je supprime ici toute les fonctuation sauf l'apostrophe et les trait d'unions
-    text_sans_ponctuation = texte.translate(str.maketrans(", ", string.punctuation.replace("'", "").replace("-", "")))
-    # On gere les appostrophe et le tiret pour eviter la concaténation des mots
-    texte_nettoye = " ".join([mot.strip(string.punctuation) for mot in texte_sans_pontuation.split()])
-
-    return texte_nettoye
-
 
 # Liste des chemins des fichiers
 chemins_fichiers = [
@@ -145,37 +192,6 @@ for chemin_fichier in chemins_fichiers:
 
 # PARTIE DE MARIEM ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-import os
-
-
-def transpose(matrix):
-    transposed = []
-    for i in range(len(matrix[0])):
-        transposed_row = []
-        for row in matrix:
-            transposed_row.append(row[i])
-        transposed.append(transposed_row)
-    return transposed
-
-
-def calculate_tfidf(directory):
-    documents = []
-    for filename in os.list(dictionary):
-        with open(os.join(dierctory, nabil), 'r') as f:
-            documents.append(f.read())
-        vectorizer = tfidfVectorizer.fit_transform(documents)
-        return vectorizer
-
-
-def find_least_important_words(directory):
-    words, tfidf_matrix = calculate_tfidf(directory)
-    tfidf_matrix_matrix = transpose(tfidf_matrix)
-    least_important_words = []
-    for i, word in enumerate(words):
-        if all(score == 0 for score in tfidf_matrix[i]):
-            least_important_words.append(word)
-    return least_important_words
-
 
 directory = "nabil"
 print("least important words:", find_least_important_words(directory))
@@ -183,17 +199,6 @@ print("least important words:", find_least_important_words(directory))
 max_scores = df.max()
 highest_tfidf_words = max_scores[max_scores.max()]
 print(f"the words with the highest tf_idf score are {highest_tfidf_words} with a score of {max_scores.max()}.")
-
-import os
-import string
-import collections
-
-
-def nettoyer_texte(texte):
-    text_sans_ponctuation = texte.translate(str.maketrans(", ", string.punctuation.replace("'", "").replace("-", "")))
-    texte_nettoye = " ".join([mot.strip(string.punctuation) for mot in text_sans_ponctuation.split()])
-    return texte_nettoye
-
 
 chemins_fichiers = []
 
@@ -226,49 +231,33 @@ for word, count in word_counts.most_common(10):
     print(f"{word}: {count}")
 
 
+# travail mariem #17/12/2023
+# 1
 
 
 
-
-
-
-
-#travail mariem #17/12/2023
-#1
-def split_question(question):
-    return question.split()
 question = "What is the Earth made of?"
 words = split_question(question)
 print(words)
-#2
-def common_terms(question, corpus):
-    corpus_content = [extract(file) for file in corpus]
-    question_terms = set(question.lower().split())
-    corpus_terms = set(' '.join(corpus_content).lower().split())
-    # Find and return the common terms
-    common = question_terms.intersection(corpus_terms)
-    return common
+
+
+# 2
+
+
 
 question = "terms that form the intersection between the set of words in the corpus and the set of words in the question ?"
-corpus = ("Nomination_Chirac1.txt", "Nomination_Chirac2.txt", "Nomination_Giscard dEstaing.txt", "Nomination_Hollande.txt",
+corpus = (
+"Nomination_Chirac1.txt", "Nomination_Chirac2.txt", "Nomination_Giscard dEstaing.txt", "Nomination_Hollande.txt",
 "Nomination_Macron.txt", "Nomination_Mitterand1.txt", "Nomination_Mitterand2.txt", "Nomination_Sarkozy.txt")
 
 print(common_terms(question, corpus))
-#3
+# 3
 question = "the TF-IDF matrix of the corpus must have N rows and M columns, where N = 8 and M =1681 "
-corpus = ("Nomination_Chirac1.txt", "Nomination_Chirac2.txt", "Nomination_Giscard dEstaing.txt", "Nomination_Hollande.txt",
+corpus = (
+"Nomination_Chirac1.txt", "Nomination_Chirac2.txt", "Nomination_Giscard dEstaing.txt", "Nomination_Hollande.txt",
 "Nomination_Macron.txt", "Nomination_Mitterand1.txt", "Nomination_Mitterand2.txt", "Nomination_Sarkozy.txt")
-def compute_tf(question, corpus):
-    words = question.split()
-    tf_scores = {words}
-    tf_victor = {}
-
-    for words in corpus :
-        tf_vector[word] = tf_scores.get(word, 0)
-    return tf_vector
 
 
 
 
 # Travail Hugo
-
