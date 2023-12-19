@@ -45,9 +45,14 @@ print(
 import os
 import string
 import collections
+import shutil
 
 
-def extract(file):
+
+
+
+def extract_prenom(file):
+    nom = ''
     if file[-5] == '1' or file[-5] == '2':
         nom = file[11:-5]
     else:
@@ -55,20 +60,27 @@ def extract(file):
     return nom
 
 
-def associate(liste1, liste2):
+def associate_nom_prenom(liste1, liste2):
     for i in range(len(liste1)):
         liste2.append('')
-        m = extract(liste1[i])
-        prenom = dico[m]
-        np = m + ' ' + prenom
-        liste2[i] = np
+        nom = extract_prenom(liste1[i])
+        prenom = dico[nom]
+        nom_prenom = nom + ' ' + prenom
+        liste2[i] = nom_prenom
     return liste2
 
 
 def nettoyer_texte(texte):
-    text_sans_ponctuation = texte.translate(str.maketrans(", ", string.punctuation.replace("'", "").replace("-", "")))
+    text_sans_ponctuation = texte.translate(str.maketrans(",", string.punctuation.replace("'", " ").replace("-", " ")))
     texte_nettoye = " ".join([mot.strip(string.punctuation) for mot in text_sans_ponctuation.split()])
     return texte_nettoye
+
+def Clean_Text(texte):
+    NewText = texte.strip()
+    cleaned_txt = NewText.translate(str.maketrans("'-","  "))
+    return cleaned_txt
+
+
 
 
 def transpose(matrix):
@@ -84,7 +96,7 @@ def transpose(matrix):
 def calculate_tfidf(directory):
     documents = []
     for filename in os.list(dictionary):
-        with open(os.join(dierctory, nabil), 'r') as f:
+        with open(os.join(directory, nabil), 'r') as f:
             documents.append(f.read())
         vectorizer = tfidfVectorizer.fit_transform(documents)
         return vectorizer
@@ -117,52 +129,67 @@ def compute_tf(question, corpus):
     words = question.split()
     tf_scores = {words}
     tf_victor = {}
-
     for words in corpus:
         tf_vector[word] = tf_scores.get(word, 0)
     return tf_vector
 
-nom = ''
-prenom = ''
+
 L = ("Nomination_Chirac1.txt", "Nomination_Chirac2.txt", "Nomination_Giscard dEstaing.txt", "Nomination_Hollande.txt",
      "Nomination_Macron.txt", "Nomination_Mitterand1.txt", "Nomination_Mitterand2.txt", "Nomination_Sarkozy.txt")
-extract("Nomination_Chirac1.txt")
-extract("Nomination_Chirac2.txt")
-extract("Nomination_Giscard dEstaing.txt")
-extract("Nomination_Hollande.txt")
-extract("Nomination_Macron.txt")
-extract("Nomination_Mitterand1.txt")
-extract("Nomination_Mitterand2.txt")
-extract("Nomination_Sarkozy.txt")
 
 dico = {'Chirac': 'Jacques', 'Giscard dEstaing': 'Valérie', 'Hollande': 'François', 'Macron': 'Emmanuel',
         'Mitterand': 'François', 'Sarkozy': 'Nicolas'}
 
 newlist = []
-
-Liste_presidents = associate(L, newlist)
+Liste_presidents = associate_nom_prenom(L, newlist)
 NewListe_presidents = []
 for i in range(len(Liste_presidents)):
     if Liste_presidents[i] not in NewListe_presidents:
         NewListe_presidents.append(Liste_presidents[i])
 print(NewListe_presidents)
 
+with open(":/../Speeches/Nomination_Chirac1.txt", "r") as f1, open(":/../Speeches/Nomination_Chirac2.txt", "r") as f2, open(":/../Speeches/Nomination_Giscard dEstaing.txt", "r") as f3, open(":/../Speeches/Nomination_Sarkozy.txt", "r") as f4, open(":/../Speeches/Nomination_Mitterrand1.txt","r") as f5, open(":/../Speeches/Nomination_Mitterrand2.txt","r") as f6, open(":/../Speeches/Nomination_Hollande.txt", "r") as f7, open(":/../Speeches/Nomination_Macron.txt", "r") as f8 :
+    lines1 = f1.readlines()
+    lines2 = f2.readlines()
+    lines3 = f3.readlines()
+    lines4 = f4.readlines()
+    lines5 = f5.readlines()
+    lines6 = f6.readlines()
+    lines7 = f7.readlines()
+    lines8 = f8.readlines()
+with open(":/../cleaned/Nomination_Chirac1_cleaned.txt", "w") as F1, open(":/../cleaned/Nomination_Chirac2_cleaned.txt", "w") as F2, open(":/../cleaned/Nomination_Giscard dEstaing_cleaned.txt", "w") as F3, open(":/../cleaned/Nomination_Sarkozy_cleaned.txt", "w") as F4, open(":/../cleaned/Nomination_Mitterrand1_cleaned.txt", "w") as F5, open(":/../cleaned/Nomination_Mitterrand2_cleaned.txt", "w") as F6, open(":/../cleaned/Nomination_Hollande_cleaned.txt","w") as F7, open(":/../cleaned/Nomination_Macron_cleaned.txt", "w") as F8:
+    for Line1 in lines1 :
+        print(Clean_Text(Line1))
+    for Line2 in lines2 :
+        F2 = Clean_Text(Line2)
+    for Line3 in lines3 :
+        F3 = Clean_Text(Line3)
+    for Line4 in lines4 :
+        F4 = Clean_Text(Line4)
+    for Line5 in lines5 :
+        F5 = Clean_Text(Line5)
+    for Line6 in lines6 :
+        F6 = Clean_Text(Line6)
+    for Line7 in lines7 :
+        F7 = Clean_Text(Line7)
+    for Line8 in lines8 :
+        F8 = Clean_Text(Line8)
+
+
+
 # Liste des chemins des fichiers
+
 chemins_fichiers = [
-    '/Users/nabil/Desktop/ChatBot-2023/SPeeches/Nomination_Chirac1.txt',
-    '/Users/nabil/Desktop/ChatBot-2023/SPeeches/Nomination_Chirac2.txt',
-    '/Users/nabil/Desktop/ChatBot-2023/SPeeches/Nomination_Giscard_dEstaing.txt',
-    '/Users/nabil/Desktop/ChatBot-2023/SPeeches/Nomination_Hollande.txt',
-    '/Users/nabil/Desktop/ChatBot-2023/SPeeches/Nomination_Macron.txt',
-    '/Users/nabil/Desktop/ChatBot-2023/SPeeches/Nomination_Mitterrand1.txt',
-    '/Users/nabil/Desktop/ChatBot-2023/SPeeches/Nomination_Mitterrand2.txt',
-    '/Users/nabil/Desktop/ChatBot-2023/SPeeches/Nomination_Sarkozy.txt'
+    ':/../Speeches/Nomination_Chirac1.txt',
+    ':/../Speeches/Nomination_Chirac2.txt',
+    ':/../Speeches/Nomination_Giscard_dEstaing.txt',
+    ':/../Speeches/Nomination_Hollande.txt',
+    ':/../Speeches/Nomination_Macron.txt',
+    ':/../Speeches/Nomination_Mitterrand1.txt',
+    ':/../Speeches/Nomination_Mitterrand2.txt',
+    ':/../Speeches/Nomination_Sarkozy.txt'
 ]
 
-# Créer le dossier "cleaned" s'il n'existe pas
-dossier_cleaned = '/users/nabil/Desktop/SPeeches/cleaned'
-if not os.path.exists(dossier_cleaned):
-    os.makedirs(dossier_cleaned)
 
 # Pour parcourir la liste des chemins des fichiers :
 for chemin_fichier in chemins_fichiers:
@@ -190,7 +217,7 @@ for chemin_fichier in chemins_fichiers:
     except Exception as e:
         print(f"Une erreur s'est produite lors de la conversion du fichier {chemin_fichier}: {e}")
 
-# PARTIE DE MARIEM ///////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 
 directory = "nabil"
@@ -231,18 +258,13 @@ for word, count in word_counts.most_common(10):
     print(f"{word}: {count}")
 
 
-# travail mariem #17/12/2023
-# 1
+
 
 
 
 question = "What is the Earth made of?"
 words = split_question(question)
 print(words)
-
-
-# 2
-
 
 
 question = "terms that form the intersection between the set of words in the corpus and the set of words in the question ?"
@@ -260,4 +282,4 @@ corpus = (
 
 
 
-# Travail Hugo
+
